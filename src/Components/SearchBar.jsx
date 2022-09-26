@@ -68,14 +68,13 @@ function SearchBar() {
 
   const renderMeals = (data) => {
     const MAX_RECIPES_IN_SCREEN = 12;
-    console.log('data fora', data);
-    if (data.length > 0) {
+    if (data.meals) {
       if (data.meals.length === 1) {
         oneRecipeFound(data.meals);
       }
       const twelveCards = data.meals.filter((e, index) => index < MAX_RECIPES_IN_SCREEN);
-      console.log('twelve', twelveCards);
-      console.log('data', data);
+      // console.log('twelve', twelveCards);
+      // console.log('data', data);
       const cards = twelveCards.map((card, index) => {
         const { idMeal, strMeal, strMealThumb } = card;
         return (
@@ -96,7 +95,7 @@ function SearchBar() {
   const renderDrinks = (data) => {
     const MAX_RECIPES_IN_SCREEN = 12;
 
-    if (data) {
+    if (data.drinks) {
       if (data.drinks.length === 1) {
         oneRecipeFound(data.drinks);
       }
@@ -107,7 +106,7 @@ function SearchBar() {
         return (
           <div key={ idDrink } data-testid={ `${index}-recipe-card` }>
             <img
-              key={ idDrink + strMeal }
+              key={ idDrink + strDrink }
               src={ strDrinkThumb }
               alt={ strDrink }
               data-testid={ `${index}-card-img` }
@@ -124,8 +123,9 @@ function SearchBar() {
     const route = window.location.pathname;
     if (route === '/meals') {
       return renderMeals(data);
+    } if (route === '/drinks') {
+      return renderDrinks(data);
     }
-    return renderDrinks(data);
   };
 
   return (
