@@ -9,10 +9,12 @@
   justify-content: center;
   width: 100%;
 }
-.footer{
-  position:fixed;
-  bottom:0;
+
+.footer {
+  bottom: 0;
+  position: fixed;
 }
+
 .rocksGlass {
   animation: shake 1s infinite ease;
   max-height: 80vh;
