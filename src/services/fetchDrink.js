@@ -1,8 +1,8 @@
 const ERROR_MSG = 'Sorry, we haven\'t found any recipes for these filters.';
 const ERROR_DETAILS = 'Error details';
 
-export const fetchMealByIngredient = async (ingredient) => {
-  const endpoint = `https://www.themealdb.com/api/json/v1/1/filter.php?i=${ingredient}`;
+export const fetchDrinkByIngredient = async (ingredient) => {
+  const endpoint = `https://www.thecocktaildb.com/api/json/v1/1/filter.php?i=${ingredient}`;
   try {
     const request = await fetch(endpoint);
     const data = await request.json();
@@ -16,8 +16,8 @@ export const fetchMealByIngredient = async (ingredient) => {
   }
 };
 
-export const fetchMealByName = async (name) => {
-  const endpoint = `https://www.themealdb.com/api/json/v1/1/search.php?s=${name}`;
+export const fetchDrinkByName = async (name) => {
+  const endpoint = `https://www.thecocktaildb.com/api/json/v1/1/search.php?s=${name}`;
   try {
     const request = await fetch(endpoint);
     const data = await request.json();
@@ -30,8 +30,8 @@ export const fetchMealByName = async (name) => {
     throw new Error(ERROR_DETAILS, error);
   }
 };
-export const fetchMealByFirstLetter = async (firstLetter, searchLength) => {
-  const endpoint = `https://www.themealdb.com/api/json/v1/1/search.php?f=${firstLetter}`;
+export const fetchDrinkByFirstLetter = async (firstLetter, searchLength) => {
+  const endpoint = `https://www.thecocktaildb.com/api/json/v1/1/search.php?f=${firstLetter}`;
   if (searchLength === 1) {
     try {
       const request = await fetch(endpoint);
