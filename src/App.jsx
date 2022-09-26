@@ -34,7 +34,6 @@ function App() {
         </BrowserRouter>
       </RecipesProvider>
     </main>
-
   );
 }
 
