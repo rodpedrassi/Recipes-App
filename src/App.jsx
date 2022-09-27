@@ -1,6 +1,6 @@
 import React from 'react';
 import './App.css';
-import { Route, Switch, BrowserRouter } from 'react-router-dom';
+import { Route, Switch } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Login from './Components/Login';
 import Recipes from './pages/Recipes';
@@ -16,20 +16,18 @@ import Favorites from './pages/Favorites';
 function App() {
   return (
     <main className="">
-      <BrowserRouter>
-        <Switch>
-          <Route exact path="/" component={ Login } />
-          <Route exact path="/meals" component={ Recipes } />
-          <Route exact path="/drinks" component={ Drinks } />
-          <Route exact path="/meals/:id" component={ MealRecipe } />
-          <Route exact path="/drinks/:id" component={ DrinkRecipe } />
-          <Route exact path="/drinks/:id/progress" component={ DrinksInProgress } />
-          <Route exact path="/meals/:id/progress" component={ MealInProgress } />
-          <Route exact path="/profile" component={ Profile } />
-          <Route exact path="/done-recipes" component={ Done } />
-          <Route exact path="/favorite-recipes" component={ Favorites } />
-        </Switch>
-      </BrowserRouter>
+      <Switch>
+        <Route exact path="/" component={ Login } />
+        <Route exact path="/meals" component={ Recipes } />
+        <Route exact path="/drinks" component={ Drinks } />
+        <Route exact path="/meals/:id" component={ MealRecipe } />
+        <Route exact path="/drinks/:id" component={ DrinkRecipe } />
+        <Route exact path="/drinks/:id/progress" component={ DrinksInProgress } />
+        <Route exact path="/meals/:id/progress" component={ MealInProgress } />
+        <Route exact path="/profile" component={ Profile } />
+        <Route exact path="/done-recipes" component={ Done } />
+        <Route exact path="/favorite-recipes" component={ Favorites } />
+      </Switch>
     </main>
 
   );
