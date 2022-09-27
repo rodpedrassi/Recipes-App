@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import RecipesContext from './RecipesContext';
 
 function RecipesProvider({ children }) {
-  const [recipesSearched, setRecipesSearched] = useState([]);
+  const [recipesSearched, setRecipesSearched] = useState({});
   const [renderizedRecipes, setRenderizedRecipes] = useState([]);
   const [isSearching, setIsSearching] = useState(false);
 

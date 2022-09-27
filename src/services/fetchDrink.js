@@ -6,7 +6,7 @@ export const fetchDrinkByIngredient = async (ingredient) => {
   try {
     const request = await fetch(endpoint);
     const data = await request.json();
-    if (!data.meals) {
+    if (!data.drinks) {
       global.alert(ERROR_MSG);
     } else {
       return data;
@@ -21,7 +21,7 @@ export const fetchDrinkByName = async (name) => {
   try {
     const request = await fetch(endpoint);
     const data = await request.json();
-    if (!data.meals) {
+    if (!data.drinks) {
       global.alert(ERROR_MSG);
     } else {
       return data;

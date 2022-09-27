@@ -23,7 +23,7 @@ function Header({ title }) {
       </Link>
       {SearchShow && (
         <i data-testid="search-top-btn" src={ searchIcon }>
-          <button type="button" onClick={ searchShowBar }>
+          <button data-testid="help" type="button" onClick={ searchShowBar }>
             <img
               src={ searchIcon }
               alt="Ícone de pesquisa"
