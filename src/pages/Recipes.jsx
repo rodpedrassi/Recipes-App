@@ -4,7 +4,7 @@ import Footer from '../Components/Footer';
 
 function Recipes() {
   return (
-    <div>
+    <div data-testid="section-recipes">
       <Header title="Meals" />
       <Footer />
     </div>
