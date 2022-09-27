@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import RecipesContext from '../context/RecipesContext';
 import {
@@ -9,16 +9,92 @@ import {
   fetchDrinkByFirstLetter,
   fetchDrinkByIngredient,
   fetchDrinkByName } from '../services/fetchDrink';
+import RecipeCards from './RecipeCards';
 
 function SearchBar() {
   const history = useHistory();
   const [search, setSearch] = useState('');
   const [typeOfSearch, setTypeOfSearch] = useState('ingredient');
   const {
-    recipesSearched, setRecipesSearched, isSearching, setIsSearching,
-    // renderizedRecipes,
-    // setRenderizedRecipes,
+    recipesSearched, setRecipesSearched, setIsSearching, setRenderizedRecipes,
   } = useContext(RecipesContext);
+
+  const oneRecipeFound = (recipe) => {
+    const route = window.location.pathname;
+    if (route === '/meals') {
+      const { idMeal } = recipe[0];
+      history.push(`/meals/${idMeal}`);
+    } else {
+      const { idDrink } = recipe[0];
+      history.push(`/drinks/${idDrink}`);
+    }
+  };
+
+  const renderMeals = (data) => {
+    const MAX_RECIPES_IN_SCREEN = 12;
+    if (data === undefined) {
+      return null;
+    }
+    if (Object.keys(data).length === 1) {
+      if (data.meals.length === 1) {
+        oneRecipeFound(data.meals);
+      }
+      const twelveCards = data.meals.filter((e, index) => index < MAX_RECIPES_IN_SCREEN);
+      const cards = twelveCards.map((card, index) => {
+        const { idMeal, strMeal, strMealThumb } = card;
+        return (
+          <div key={ idMeal } data-testid={ `${index}-recipe-card` }>
+            <img
+              key={ idMeal + strMeal }
+              src={ strMealThumb }
+              alt={ strMeal }
+              data-testid={ `${index}-card-img` }
+            />
+            <h3 key={ strMeal } data-testid={ `${index}-card-name` }>{strMeal}</h3>
+          </div>
+        );
+      });
+      return cards;
+    }
+  };
+  const renderDrinks = (data) => {
+    const MAX_RECIPES_IN_SCREEN = 12;
+    if (data === undefined) {
+      return null;
+    }
+    if (Object.keys(data).length === 1) {
+      if (data.drinks.length === 1) {
+        oneRecipeFound(data.drinks);
+      }
+      const twelveCards = data.drinks.filter((e, index) => index < MAX_RECIPES_IN_SCREEN);
+      console.log(twelveCards);
+      const cards = twelveCards.map((card, index) => {
+        const { idDrink, strDrink, strDrinkThumb } = card;
+        return (
+          <div key={ idDrink } data-testid={ `${index}-recipe-card` }>
+            <img
+              key={ idDrink + strDrink }
+              src={ strDrinkThumb }
+              alt={ strDrink }
+              data-testid={ `${index}-card-img` }
+            />
+            <h3 key={ strDrink } data-testid={ `${index}-card-name` }>{strDrink}</h3>
+          </div>
+        );
+      });
+      return cards;
+    }
+  };
+
+  const renderCards = (data) => {
+    const route = window.location.pathname;
+    console.log(data);
+    if (route === '/meals') {
+      setRenderizedRecipes(renderMeals(data));
+    } if (route === '/drinks') {
+      setRenderizedRecipes(renderDrinks(data));
+    }
+  };
 
   const handleClick = async (e) => {
     e.preventDefault();
@@ -55,82 +131,12 @@ function SearchBar() {
     }
   };
 
-  const oneRecipeFound = (recipe) => {
-    const route = window.location.pathname;
-    if (route === '/meals') {
-      const { idMeal } = recipe[0];
-      history.push(`/meals/${idMeal}`);
-    } else {
-      const { idDrink } = recipe[0];
-      history.push(`/drinks/${idDrink}`);
-    }
-  };
-
-  const renderMeals = (data) => {
-    const MAX_RECIPES_IN_SCREEN = 12;
-    console.log('data fora', data);
-    if (data.length > 0) {
-      if (data.meals.length === 1) {
-        oneRecipeFound(data.meals);
-      }
-      const twelveCards = data.meals.filter((e, index) => index < MAX_RECIPES_IN_SCREEN);
-      console.log('twelve', twelveCards);
-      console.log('data', data);
-      const cards = twelveCards.map((card, index) => {
-        const { idMeal, strMeal, strMealThumb } = card;
-        return (
-          <div key={ idMeal } data-testid={ `${index}-recipe-card` }>
-            <img
-              key={ idMeal + strMeal }
-              src={ strMealThumb }
-              alt={ strMeal }
-              data-testid={ `${index}-card-img` }
-            />
-            <h3 key={ strMeal } data-testid={ `${index}-card-name` }>{strMeal}</h3>
-          </div>
-        );
-      });
-      return cards;
-    }
-  };
-  const renderDrinks = (data) => {
-    const MAX_RECIPES_IN_SCREEN = 12;
-
-    if (data) {
-      if (data.drinks.length === 1) {
-        oneRecipeFound(data.drinks);
-      }
-      const twelveCards = data.drinks.filter((e, index) => index < MAX_RECIPES_IN_SCREEN);
-      console.log(twelveCards);
-      const cards = twelveCards.map((card, index) => {
-        const { idDrink, strDrink, strDrinkThumb } = card;
-        return (
-          <div key={ idDrink } data-testid={ `${index}-recipe-card` }>
-            <img
-              key={ idDrink + strMeal }
-              src={ strDrinkThumb }
-              alt={ strDrink }
-              data-testid={ `${index}-card-img` }
-            />
-            <h3 key={ strDrink } data-testid={ `${index}-card-name` }>{strDrink}</h3>
-          </div>
-        );
-      });
-      return cards;
-    }
-  };
-
-  const renderCards = (data) => {
-    const route = window.location.pathname;
-    if (route === '/meals') {
-      return renderMeals(data);
-    }
-    return renderDrinks(data);
-  };
+  useEffect(() => {
+    renderCards(recipesSearched);
+  }, [recipesSearched]);
 
   return (
     <div>
-
       <form onSubmit={ handleClick }>
         <input
           data-testid="search-input"
@@ -179,7 +185,7 @@ function SearchBar() {
           Procurar
         </button>
       </form>
-      {isSearching && renderCards(recipesSearched)}
+      <RecipeCards />
     </div>
 
   );
