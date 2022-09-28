@@ -32,12 +32,12 @@ export const fetchMealByName = async (name) => {
 };
 export const fetchMealByFirstLetter = async (firstLetter, searchLength) => {
   const endpoint = `https://www.themealdb.com/api/json/v1/1/search.php?f=${firstLetter}`;
-  console.log(endpoint);
+  // console.log(endpoint);
   if (searchLength === 1) {
     try {
       const request = await fetch(endpoint);
       const data = await request.json();
-      console.log(data);
+      // console.log(data);
       return data;
     } catch (error) {
       throw new Error(ERROR_DETAILS, error);
@@ -45,5 +45,16 @@ export const fetchMealByFirstLetter = async (firstLetter, searchLength) => {
   } else {
     global.alert('Your search must have only 1 (one) character');
     return undefined;
+  }
+};
+
+export const fetchCategoryMeals = async () => {
+  const endpoint = 'https://www.themealdb.com/api/json/v1/1/list.php?c=list';
+  try {
+    const request = await fetch(endpoint);
+    const data = await request.json();
+    return data;
+  } catch (error) {
+    throw new Error(ERROR_DETAILS, error);
   }
 };
