@@ -1,17 +1,26 @@
 import React from 'react';
 import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { mockMeals } from './helpers/mock/mockFirstLetter';
+// import { mockMeals } from './helpers/mock/mockFirstLetter';
+import oneMeal from '../../cypress/mocks/oneMeal';
 import App from '../App';
 import renderWithRouterAndRedux from './helpers/renderWithRouterAndRedux';
 
+// jest.spyOn(global, 'fetch');
+// global.fetch.mockResolvedValue({
+// json: jest.fn()
+// .mockResolvedValueOnce(baseMeals)
+// .mockResolvedValueOnce(mealCategories)
+// .mockResolvedValue(oneMealMock),
+// });
+
 describe('Testa o componente SearchBar com a rota /meals', () => {
-  beforeEach(() => {
-    jest.spyOn(global, 'fetch');
-    global.fetch.mockResolvedValue({
-      json: jest.fn().mockReturnValue(mockMeals),
-    });
-  });
+  // beforeEach(() => {
+  //   jest.spyOn(global, 'fetch');
+  //   global.fetch.mockResolvedValue({
+  //     json: jest.fn().mockReturnValue(mockMeals),
+  //   });
+  // });
 
   test('Checa se todos os componentes foram renderizados', async () => {
     renderWithRouterAndRedux(<App />, { initialEntries: ['/meals'] });
@@ -32,7 +41,17 @@ describe('Testa o componente SearchBar com a rota /meals', () => {
     expect(radioFirstLetter).toBeInTheDocument();
     expect(searchButton).toBeInTheDocument();
   });
-  test('Checa se pesquisar por 1 caracter retorna o esperado', async () => {
+  // await waitFor(() => expect(alert).toHaveBeenCalledWith('Your search must have only 1 (one) character'));
+  test.only('Checa se ao pesquisar por 1 caracter retorna o esperado', async () => {
+    // jest.spyOn(global, 'fetch');
+    // global.fetch.mockResolvedValue({
+    //   json: jest.fn()
+    //     .mockResolvedValue(mockMeals),
+    // });
+    global.fetch = jest.fn(() => Promise.resolve({
+      json: () => Promise.resolve(oneMeal),
+    }));
+
     renderWithRouterAndRedux(<App />, { initialEntries: ['/meals'] });
 
     const searchIcon = screen.getByTestId('help');
@@ -44,15 +63,16 @@ describe('Testa o componente SearchBar com a rota /meals', () => {
     const searchButton = screen.getByTestId('exec-search-btn');
 
     expect(radioFirstLetter).toBeInTheDocument();
-    userEvent.type(searchBar, 'a');
+    userEvent.type(searchBar, 'S');
     userEvent.click(radioFirstLetter);
     userEvent.click(searchButton);
-    await waitFor(() => expect(global.fetch).toHaveBeenCalled());
-    // await waitFor(() => expect(alert).toHaveBeenCalledWith('Your search must have only 1 (one) character'));
-    // const card0 = screen.getByTestId('0-recipe-card');
-    // const card1 = screen.getByTestId('1-recipe-card');
-    // const card2 = screen.getByTestId('2-recipe-card');
 
-    // expect(card0).toBeInTheDocument();
+    await waitFor(() => expect(global.fetch).toHaveBeenCalled());
+    const card01 = screen.findByTestId('0-recipe-card');
+    // const card0 = screen.getByTestId('0-recipe-card');
+    // const card1 = screen.findByTestId('1-recipe-card');
+    // const card2 = screen.findByTestId('2-recipe-card');
+
+    expect(await card01).toBeInTheDocument();
   });
 });

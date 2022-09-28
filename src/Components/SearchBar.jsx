@@ -88,7 +88,7 @@ function SearchBar() {
 
   const renderCards = (data) => {
     const route = window.location.pathname;
-    console.log(data);
+    // console.log(data);
     if (route === '/meals') {
       setRenderizedRecipes(renderMeals(data));
     } if (route === '/drinks') {

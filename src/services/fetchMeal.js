@@ -32,10 +32,12 @@ export const fetchMealByName = async (name) => {
 };
 export const fetchMealByFirstLetter = async (firstLetter, searchLength) => {
   const endpoint = `https://www.themealdb.com/api/json/v1/1/search.php?f=${firstLetter}`;
+  console.log(endpoint);
   if (searchLength === 1) {
     try {
       const request = await fetch(endpoint);
       const data = await request.json();
+      console.log(data);
       return data;
     } catch (error) {
       throw new Error(ERROR_DETAILS, error);
