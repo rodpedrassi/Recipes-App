@@ -1,13 +1,58 @@
 import React from 'react';
-import Header from '../Components/Header';
+import { useHistory } from 'react-router-dom';
 import Footer from '../Components/Footer';
+import Header from '../Components/Header';
 
 function Profile() {
+  const history = useHistory();
+
+  let userEmail = localStorage.getItem('user');
+  if (userEmail) {
+    userEmail = JSON.parse(userEmail).email;
+  } else {
+    userEmail = 'test@test.com';
+    localStorage.setItem('user', '{"email": "test@test.com"}');
+  }
+
+  function onLogoutClick() {
+    history.push('/');
+    localStorage.clear();
+  }
   return (
-    <div>
-      <Header title="Profile" />
+    <main className="main-profile">
+      <Header />
+      <div className="profile-buttons">
+        <h2 data-testid="profile-email">{userEmail}</h2>
+        <div>
+          <button
+            data-testid="profile-done-btn"
+            type="button"
+            onClick={ () => history.push('done-recipes') }
+          >
+            Done Recipes
+
+          </button>
+          <button
+            data-testid="profile-favorite-btn"
+            type="button"
+            onClick={ () => history.push('favorite-recipes') }
+          >
+            Favorite Recipes
+
+          </button>
+          <button
+            data-testid="profile-logout-btn"
+            type="button"
+            onClick={ onLogoutClick }
+          >
+            Logout
+
+          </button>
+
+        </div>
+      </div>
       <Footer />
-    </div>
+    </main>
   );
 }
 
