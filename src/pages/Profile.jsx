@@ -1,59 +1,49 @@
-import React from 'react';
-import { useHistory } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import Footer from '../Components/Footer';
 import Header from '../Components/Header';
+import { getSavedByKey } from '../services/localStorage';
 
-function Profile() {
-  const history = useHistory();
-
-  let userEmail = localStorage.getItem('user');
-  if (userEmail) {
-    userEmail = JSON.parse(userEmail).email;
-  } else {
-    userEmail = 'test@test.com';
-    localStorage.setItem('user', '{"email": "test@test.com"}');
-  }
-
-  function onLogoutClick() {
-    history.push('/');
+export default function Profile() {
+  const [showEmail, setShowEmail] = useState('');
+  useEffect(() => {
+    const { email } = getSavedByKey('user');
+    setShowEmail(email);
+  }, []);
+  const logoutClear = () => {
     localStorage.clear();
-  }
+  };
+
   return (
-    <main className="main-profile">
-      <Header />
-      <div className="profile-buttons">
-        <h2 data-testid="profile-email">{userEmail}</h2>
-        <div>
-          <button
-            data-testid="profile-done-btn"
-            type="button"
-            onClick={ () => history.push('done-recipes') }
-          >
-            Done Recipes
-
-          </button>
-          <button
-            data-testid="profile-favorite-btn"
-            type="button"
-            onClick={ () => history.push('favorite-recipes') }
-          >
-            Favorite Recipes
-
-          </button>
-          <button
-            data-testid="profile-logout-btn"
-            type="button"
-            onClick={ onLogoutClick }
-          >
-            Logout
-
-          </button>
-
-        </div>
-      </div>
-      <Footer />
-    </main>
+    <div>
+      <Header title="Profile" />
+      <h4 data-testid="profile-email">{ showEmail }</h4>
+      <Link to="/done-recipes">
+        <button
+          type="button"
+          data-testid="profile-done-btn"
+        >
+          Done Recipes
+        </button>
+      </Link>
+      <Link to="/favorite-recipes">
+        <button
+          type="button"
+          data-testid="profile-favorite-btn"
+        >
+          Favorite Recipes
+        </button>
+      </Link>
+      <Link to="/">
+        <button
+          type="button"
+          data-testid="profile-logout-btn"
+          onClick={ logoutClear }
+        >
+          Logout
+        </button>
+      </Link>
+      <Footer title="Profile" />
+    </div>
   );
 }
-
-export default Profile;
