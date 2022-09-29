@@ -61,3 +61,25 @@ export const fetchDrinkByFirstLetter = async (firstLetter, searchLength) => {
     return undefined;
   }
 };
+
+export const fetchCategoryDrinks = async () => {
+  const endpoint = 'https://www.thecocktaildb.com/api/json/v1/1/list.php?c=list';
+  try {
+    const request = await fetch(endpoint);
+    const data = await request.json();
+    return data;
+  } catch (error) {
+    throw new Error(ERROR_DETAILS, error);
+  }
+};
+
+export const fetchFilterByCategoryDrinks = async (category) => {
+  const endpoint = `https://www.thecocktaildb.com/api/json/v1/1/filter.php?c=${category}`;
+  try {
+    const request = await fetch(endpoint);
+    const data = await request.json();
+    return data;
+  } catch (error) {
+    throw new Error(ERROR_DETAILS, error);
+  }
+};
