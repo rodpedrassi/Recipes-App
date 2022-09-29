@@ -12,6 +12,7 @@ import {
 function Drinks() {
   const { setRenderizedRecipes } = useContext(RecipesContext);
   const [categories, setCategories] = useState({});
+  const [toggleCategories, setToggleCategories] = useState(true);
 
   const MAX_RECIPES_IN_SCREEN = 12;
   const PRIMEIRAS_CINCO_CATEGORIAS = 5;
@@ -46,10 +47,16 @@ function Drinks() {
   }, []);
 
   const renderFilterCategoryByDrinks = async (category) => {
-    const result = await fetchFilterByCategoryDrinks(category);
-    const twelveCards = result.drinks
-      .filter((e, index) => index < MAX_RECIPES_IN_SCREEN);
-    setRenderizedRecipes(twelveCards);
+    if (toggleCategories) {
+      const result = await fetchFilterByCategoryDrinks(category);
+      const twelveCards = result.drinks
+        .filter((e, index) => index < MAX_RECIPES_IN_SCREEN);
+      setRenderizedRecipes(twelveCards);
+      setToggleCategories(false);
+    } else {
+      didMount();
+      setToggleCategories(true);
+    }
   };
 
   const renderCategories = () => {

@@ -9,11 +9,12 @@ import {
   fetchFilterByCategoryMeals,
   fetchMealByName,
 } from '../services/fetchMeal';
-import { fetchDrinkByName } from '../services/fetchDrink';
+import { fetchCategoryDrinks, fetchDrinkByName } from '../services/fetchDrink';
 
 function Recipes() {
   const { setRenderizedRecipes } = useContext(RecipesContext);
   const [categories, setCategories] = useState({});
+  const [toggleCategories, setToggleCategories] = useState(true);
   const MAX_RECIPES_IN_SCREEN = 12;
   const PRIMEIRAS_CINCO_CATEGORIAS = 5;
   const history = useHistory();
@@ -31,7 +32,7 @@ function Recipes() {
     if (route === '/drinks') {
       aux = 'drinks';
       response = await fetchDrinkByName('');
-      categoriesList = await fetchCategoryMeals();
+      categoriesList = await fetchCategoryDrinks();
     }
     const fiveCategories = categoriesList[aux]
       .filter((e, index) => index < PRIMEIRAS_CINCO_CATEGORIAS);
@@ -48,10 +49,16 @@ function Recipes() {
   }, []);
 
   const renderFilterCategoryByMeals = async (category) => {
-    const result = await fetchFilterByCategoryMeals(category);
-    const twelveCards = result.meals
-      .filter((e, index) => index < MAX_RECIPES_IN_SCREEN);
-    setRenderizedRecipes(twelveCards);
+    if (toggleCategories) {
+      const result = await fetchFilterByCategoryMeals(category);
+      const twelveCards = result.meals
+        .filter((e, index) => index < MAX_RECIPES_IN_SCREEN);
+      setRenderizedRecipes(twelveCards);
+      setToggleCategories(false);
+    } else {
+      didMount();
+      setToggleCategories(true);
+    }
   };
 
   const renderCategories = () => {

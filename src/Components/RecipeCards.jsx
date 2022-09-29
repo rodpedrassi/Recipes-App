@@ -6,6 +6,12 @@ function RecipeCards() {
   const { renderizedRecipes } = useContext(RecipesContext);
   const history = useHistory();
 
+  const sendToDetails = (id) => {
+    const route = history.location.pathname;
+    const path = `${route}/${id}`;
+    history.push(path);
+  };
+
   const renderCards = () => {
     const route = history.location.pathname;
     if (route === '/meals') {
@@ -13,13 +19,19 @@ function RecipeCards() {
         const { idMeal, strMeal, strMealThumb } = card;
         return (
           <div key={ idMeal } data-testid={ `${index}-recipe-card` }>
-            <img
-              key={ idMeal + strMeal }
-              src={ strMealThumb }
-              alt={ strMeal }
-              data-testid={ `${index}-card-img` }
-            />
-            <h3 key={ strMeal } data-testid={ `${index}-card-name` }>{strMeal}</h3>
+            <button
+              data-testid="button-details"
+              type="button"
+              onClick={ () => sendToDetails(idMeal) }
+            >
+              <img
+                key={ idMeal + strMeal }
+                src={ strMealThumb }
+                alt={ strMeal }
+                data-testid={ `${index}-card-img` }
+              />
+              <h3 key={ strMeal } data-testid={ `${index}-card-name` }>{strMeal}</h3>
+            </button>
           </div>
         );
       });
@@ -30,13 +42,19 @@ function RecipeCards() {
         const { idDrink, strDrink, strDrinkThumb } = card;
         return (
           <div key={ idDrink } data-testid={ `${index}-recipe-card` }>
-            <img
-              key={ idDrink + strDrink }
-              src={ strDrinkThumb }
-              alt={ strDrink }
-              data-testid={ `${index}-card-img` }
-            />
-            <h3 key={ strDrink } data-testid={ `${index}-card-name` }>{strDrink}</h3>
+            <button
+              data-testid="button-details"
+              type="button"
+              onClick={ () => sendToDetails(idDrink) }
+            >
+              <img
+                key={ idDrink + strDrink }
+                src={ strDrinkThumb }
+                alt={ strDrink }
+                data-testid={ `${index}-card-img` }
+              />
+              <h3 key={ strDrink } data-testid={ `${index}-card-name` }>{strDrink}</h3>
+            </button>
           </div>
         );
       });
