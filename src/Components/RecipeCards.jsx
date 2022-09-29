@@ -1,11 +1,13 @@
 import React, { useContext } from 'react';
+import { useHistory } from 'react-router-dom';
 import RecipesContext from '../context/RecipesContext';
 
 function RecipeCards() {
   const { renderizedRecipes } = useContext(RecipesContext);
+  const history = useHistory();
 
   const renderCards = () => {
-    const route = window.location.pathname;
+    const route = history.location.pathname;
     if (route === '/meals') {
       const cardsMeal = renderizedRecipes.map((card, index) => {
         const { idMeal, strMeal, strMealThumb } = card;

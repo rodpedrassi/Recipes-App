@@ -19,7 +19,7 @@ function SearchBar() {
   } = useContext(RecipesContext);
 
   const oneRecipeFound = (recipe) => {
-    const route = window.location.pathname;
+    const route = history.location.pathname;
     if (route === '/meals') {
       const { idMeal } = recipe[0];
       history.push(`/meals/${idMeal}`);
@@ -58,7 +58,7 @@ function SearchBar() {
   };
 
   const setCards = (data) => {
-    const route = window.location.pathname;
+    const route = history.location.pathname;
     // console.log(data);
     if (route === '/meals') {
       setRenderizedRecipes(renderMeals(data));
@@ -69,7 +69,7 @@ function SearchBar() {
 
   const handleClick = async (e) => {
     e.preventDefault();
-    const route = window.location.pathname;
+    const route = history.location.pathname;
     setIsSearching(true);
     if (route === '/meals') {
       if (typeOfSearch === 'ingredient') {
