@@ -9,7 +9,6 @@ import {
   fetchDrinkByFirstLetter,
   fetchDrinkByIngredient,
   fetchDrinkByName } from '../services/fetchDrink';
-import RecipeCards from './RecipeCards';
 
 function SearchBar() {
   const history = useHistory();
@@ -20,7 +19,7 @@ function SearchBar() {
   } = useContext(RecipesContext);
 
   const oneRecipeFound = (recipe) => {
-    const route = window.location.pathname;
+    const route = history.location.pathname;
     if (route === '/meals') {
       const { idMeal } = recipe[0];
       history.push(`/meals/${idMeal}`);
@@ -40,21 +39,7 @@ function SearchBar() {
         oneRecipeFound(data.meals);
       }
       const twelveCards = data.meals.filter((e, index) => index < MAX_RECIPES_IN_SCREEN);
-      const cards = twelveCards.map((card, index) => {
-        const { idMeal, strMeal, strMealThumb } = card;
-        return (
-          <div key={ idMeal } data-testid={ `${index}-recipe-card` }>
-            <img
-              key={ idMeal + strMeal }
-              src={ strMealThumb }
-              alt={ strMeal }
-              data-testid={ `${index}-card-img` }
-            />
-            <h3 key={ strMeal } data-testid={ `${index}-card-name` }>{strMeal}</h3>
-          </div>
-        );
-      });
-      return cards;
+      return twelveCards;
     }
   };
   const renderDrinks = (data) => {
@@ -66,29 +51,15 @@ function SearchBar() {
       if (data.drinks.length === 1) {
         oneRecipeFound(data.drinks);
       }
-      const twelveCards = data.drinks.filter((e, index) => index < MAX_RECIPES_IN_SCREEN);
-      console.log(twelveCards);
-      const cards = twelveCards.map((card, index) => {
-        const { idDrink, strDrink, strDrinkThumb } = card;
-        return (
-          <div key={ idDrink } data-testid={ `${index}-recipe-card` }>
-            <img
-              key={ idDrink + strDrink }
-              src={ strDrinkThumb }
-              alt={ strDrink }
-              data-testid={ `${index}-card-img` }
-            />
-            <h3 key={ strDrink } data-testid={ `${index}-card-name` }>{strDrink}</h3>
-          </div>
-        );
-      });
-      return cards;
+      const twelveCards = data.drinks
+        .filter((e, index) => index < MAX_RECIPES_IN_SCREEN);
+      return twelveCards;
     }
   };
 
-  const renderCards = (data) => {
-    const route = window.location.pathname;
-    console.log(data);
+  const setCards = (data) => {
+    const route = history.location.pathname;
+    // console.log(data);
     if (route === '/meals') {
       setRenderizedRecipes(renderMeals(data));
     } if (route === '/drinks') {
@@ -98,7 +69,7 @@ function SearchBar() {
 
   const handleClick = async (e) => {
     e.preventDefault();
-    const route = window.location.pathname;
+    const route = history.location.pathname;
     setIsSearching(true);
     if (route === '/meals') {
       if (typeOfSearch === 'ingredient') {
@@ -132,7 +103,7 @@ function SearchBar() {
   };
 
   useEffect(() => {
-    renderCards(recipesSearched);
+    setCards(recipesSearched);
   }, [recipesSearched]);
 
   return (
@@ -185,7 +156,6 @@ function SearchBar() {
           Procurar
         </button>
       </form>
-      <RecipeCards />
     </div>
 
   );
