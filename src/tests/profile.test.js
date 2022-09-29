@@ -1,6 +1,6 @@
 import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import renderPath from './helpers/renderWithRouterAndRedux';
+import renderPath from './renderWithRouterAndRedux';
 
 const localStorage = require('../services/localStorage');
 
