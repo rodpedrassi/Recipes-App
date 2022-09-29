@@ -30,6 +30,22 @@ export const fetchDrinkByName = async (name) => {
     throw new Error(ERROR_DETAILS, error);
   }
 };
+
+export const fetchDrinkById = async (name) => {
+  const endpoint = `https://www.thecocktaildb.com/api/json/v1/1/lookup.php?i=${name}`;
+  try {
+    const request = await fetch(endpoint);
+    const data = await request.json();
+    if (!data.drinks) {
+      global.alert(ERROR_MSG);
+    } else {
+      return data;
+    }
+  } catch (error) {
+    throw new Error(ERROR_DETAILS, error);
+  }
+};
+
 export const fetchDrinkByFirstLetter = async (firstLetter, searchLength) => {
   const endpoint = `https://www.thecocktaildb.com/api/json/v1/1/search.php?f=${firstLetter}`;
   if (searchLength === 1) {

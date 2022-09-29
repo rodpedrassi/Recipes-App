@@ -30,6 +30,22 @@ export const fetchMealByName = async (name) => {
     throw new Error(ERROR_DETAILS, error);
   }
 };
+
+export const fetchMealById = async (id) => {
+  const endpoint = `https://www.themealdb.com/api/json/v1/1/lookup.php?i=${id}`;
+  try {
+    const request = await fetch(endpoint);
+    const data = await request.json();
+    if (!data.meals) {
+      global.alert(ERROR_MSG);
+    } else {
+      return data;
+    }
+  } catch (error) {
+    throw new Error(ERROR_DETAILS, error);
+  }
+};
+
 export const fetchMealByFirstLetter = async (firstLetter, searchLength) => {
   const endpoint = `https://www.themealdb.com/api/json/v1/1/search.php?f=${firstLetter}`;
   if (searchLength === 1) {
