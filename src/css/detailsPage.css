@@ -2,3 +2,30 @@
   bottom: 0;
   position: 'fixed';
 }
+
+.recipe-detais-main img {
+  height: 360px;
+  width: 360px;
+}
+
+.carrousel-container img {
+  height: 180px;
+  width: 180px;
+}
+
+.carrousel-container {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  overflow: scroll;
+}
+
+.carrousel-card {
+  text-align: center;
+}
+
+.recipe-detais-main {
+  height: 100vh;
+  text-align: center;
+  width: 100vw;
+}

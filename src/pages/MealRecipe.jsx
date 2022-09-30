@@ -1,19 +1,28 @@
 import { React, useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { fetchMealById } from '../services/fetchMeal';
+import { fetchRecommendedDrinks } from '../services/fetchDrink';
 import '../css/detailsPage.css';
+
+const MAX_CARDS = 6;
 
 function MealRecipe() {
   const params = useParams();
 
   const [mealDetail, setMealDetail] = useState();
+  const [drinkDetail, setDrinkDetail] = useState();
 
   useEffect(() => {
     const fetchApi = async () => {
       const response = await fetchMealById(params.id);
       return setMealDetail(response.meals);
     };
+    const fetchRecomendations = async () => {
+      const response = await fetchRecommendedDrinks('https://www.thecocktaildb.com/api/json/v1/1/search.php?s=');
+      return setDrinkDetail(response.drinks);
+    };
     fetchApi();
+    fetchRecomendations();
   }, []);
 
   const ingredientsKeys = mealDetail && Object.keys(mealDetail[0]).filter(
@@ -24,10 +33,13 @@ function MealRecipe() {
     (key) => mealDetail[key] !== null && mealDetail[key] !== '',
   );
 
+  const cardsToRenderize = drinkDetail && drinkDetail
+    .filter((e, index) => index < MAX_CARDS);
+
   return (
-    <div>
+    <div className="recipe-detais-main">
       {mealDetail && mealDetail.map((meal) => (
-        <div key={ meal.idMeal }>
+        <div className="recipe-section" key={ meal.idMeal }>
           <h2 data-testid="recipe-title">{meal.strMeal}</h2>
           <img src={ meal.strMealThumb } alt="" data-testid="recipe-photo" />
           <p data-testid="recipe-category">{meal.strCategory}</p>
@@ -59,6 +71,25 @@ function MealRecipe() {
           />
         </div>
       ))}
+      <div className="carrousel-container">
+        {
+          drinkDetail && cardsToRenderize.map((card, index) => (
+            <div
+              key={ index }
+              data-testid={ `${index}-recommendation-card` }
+            >
+              <div className="carrousel-card">
+                <p data-testid={ `${index}-recommendation-title` }>{card.strDrink}</p>
+                <img
+                  src={ card.strDrinkThumb }
+                  alt=""
+                  data-testid={ `${index}-recommendation-title` }
+                />
+              </div>
+            </div>
+          ))
+        }
+      </div>
       <div>
         <button
           type="button"
