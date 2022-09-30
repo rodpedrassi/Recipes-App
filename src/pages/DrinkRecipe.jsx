@@ -12,7 +12,30 @@ function DrinkRecipe() {
   const [drinkDetail, setDrinkDetail] = useState();
   const [mealDetail, setMealDetail] = useState();
   const [isRecipeFinished, setIsRecipeFinished] = useState(true);
-  // const [isFetching, setIsFetching] = useState(true);
+  const [isProgressRecipes, setIsProgressRecipes] = useState('Start Recipe');
+
+  const progressRecipes = () => {
+    const inProgressRecipes = JSON.parse(localStorage.getItem('inProgressRecipes'));
+    if (inProgressRecipes) {
+      const { drinks } = inProgressRecipes;
+      Object.keys(drinks).forEach((element) => {
+        if (element === params.id) {
+          setIsProgressRecipes('Continue Recipe');
+        }
+      });
+    }
+  };
+
+  const recipeFinished = () => {
+    const doneRecipes = JSON.parse(localStorage.getItem('doneRecipes'));
+    if (doneRecipes) {
+      doneRecipes.forEach((element) => {
+        if (element.id === params.id) {
+          setIsRecipeFinished(false);
+        }
+      });
+    }
+  };
 
   useEffect(() => {
     const fetchApi = async () => {
@@ -23,25 +46,12 @@ function DrinkRecipe() {
       const response = await fetchRecommendedMeals('https://www.themealdb.com/api/json/v1/1/search.php?s=');
       return setMealDetail(response.meals);
     };
-    const getIsRecipeFinished = async () => {
-      const doneRecipes = await JSON.parse(localStorage.getItem('doneRecipes'));
-      let aux = true;
-      doneRecipes.forEach((element) => {
-        if (element.id === params.id) {
-          aux = false;
-        }
-      });
-      setIsRecipeFinished(aux);
-    };
+
     fetchApi();
     fetchRecomendations();
-    // setIsFetching(false);
-    getIsRecipeFinished();
+    recipeFinished();
+    progressRecipes();
   }, []);
-
-  // useEffect(() => {
-  //   getIsRecipeFinished();
-  // }, [isFetching]);
 
   const ingredientsKeys = drinkDetail && Object.keys(drinkDetail[0]).filter(
     (key) => key.includes('strIngredient'),
@@ -99,15 +109,18 @@ function DrinkRecipe() {
         }
       </div>
       {isRecipeFinished
-       && <div>
-         <button
-           type="button"
-           data-testid="start-recipe-btn"
-           style={ { position: 'fixed', bottom: 0 } }
-         >
-           Iniciar Receita
-         </button>
-       </div>}
+      && (
+        <div>
+          <button
+            type="button"
+            data-testid="start-recipe-btn"
+            style={ { position: 'fixed', bottom: 0 } }
+            value={ isProgressRecipes }
+          >
+            {isProgressRecipes}
+          </button>
+        </div>
+      )}
     </div>
   );
 }
