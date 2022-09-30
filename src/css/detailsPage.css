@@ -1,26 +1,31 @@
-.recipe-detais-main img {
-  width: 360px;
-  height: 360px;
+.start-recipe-button {
+  bottom: 0;
+  position: 'fixed';
 }
+
+.recipe-detais-main img {
+  height: 360px;
+  width: 360px;
+}
+
 .carrousel-container img {
-  width: 180px;
   height: 180px;
+  width: 180px;
 }
 
 .carrousel-container {
   display: flex;
   flex-direction: row;
-  overflow: scroll;
   gap: 10px;
+  overflow: scroll;
 }
 
 .carrousel-card {
   text-align: center;
 }
 
-
 .recipe-detais-main {
   height: 100vh;
-  width: 100vw;
   text-align: center;
+  width: 100vw;
 }

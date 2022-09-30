@@ -80,6 +80,15 @@ function DrinkRecipe() {
           ))
         }
       </div>
+      <div>
+        <button
+          type="button"
+          data-testid="start-recipe-btn"
+          style={ { position: 'fixed', bottom: 0 } }
+        >
+          Iniciar Receita
+        </button>
+      </div>
     </div>
   );
 }
