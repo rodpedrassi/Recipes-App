@@ -1,18 +1,21 @@
 import { React, useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useHistory } from 'react-router-dom';
 import { fetchMealById } from '../services/fetchMeal';
 import { fetchRecommendedDrinks } from '../services/fetchDrink';
 import '../css/detailsPage.css';
 
 const MAX_CARDS = 6;
+const copy = require('clipboard-copy');
 
 function MealRecipe() {
   const params = useParams();
+  const history = useHistory();
 
   const [mealDetail, setMealDetail] = useState();
   const [drinkDetail, setDrinkDetail] = useState();
   const [isRecipeFinished, setIsRecipeFinished] = useState(true);
   const [isProgressRecipes, setIsProgressRecipes] = useState('Start Recipe');
+  const [copiedLink, setCopiedLink] = useState(false);
 
   const progressRecipes = () => {
     const inProgressRecipes = JSON.parse(localStorage.getItem('inProgressRecipes'));
@@ -24,6 +27,18 @@ function MealRecipe() {
         }
       });
     }
+  };
+
+  const sendTo = () => {
+    const route = history.location.pathname;
+    const path = `${route}/in-progress`;
+    history.push(path);
+  };
+
+  const copyRoute = () => {
+    const route = history.location.pathname;
+    copy(`http://localhost:3000${route}`);
+    setCopiedLink(true);
   };
 
   const recipeFinished = () => {
@@ -111,7 +126,9 @@ function MealRecipe() {
                 <img
                   src={ card.strDrinkThumb }
                   alt=""
-                  data-testid={ `${index}-recommendation-title` }
+                  data-testid={ `${index}-rfunction () {
+                    copy('This is some cool text')
+                  } }ecommendation-title` }
                 />
               </div>
             </div>
@@ -126,11 +143,28 @@ function MealRecipe() {
               data-testid="start-recipe-btn"
               style={ { position: 'fixed', bottom: 0 } }
               value={ isProgressRecipes }
+              onClick={ sendTo }
             >
               {isProgressRecipes}
             </button>
           </div>
         )}
+      <div>
+        <button
+          data-testid="share-btn"
+          type="button"
+          onClick={ copyRoute }
+        >
+          Compartilhar Receita
+        </button>
+        <button
+          data-testid="favorite-btn"
+          type="button"
+        >
+          Favoritar Receita
+        </button>
+      </div>
+      {copiedLink && (<p>Link copied!</p>)}
     </div>
   );
 }
