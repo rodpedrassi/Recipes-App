@@ -1,6 +1,7 @@
 import { React, useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { fetchMealById } from '../services/fetchMeal';
+import '../css/detailsPage.css';
 
 function MealRecipe() {
   const params = useParams();
@@ -39,7 +40,7 @@ function MealRecipe() {
                   data-testid={ `${index}-ingredient-name-and-measure` }
                 >
                   {mealDetail[0][ingredient]}
-                  {(quantity !== null && quantity !== '') && ` - ${quantity}`}
+                  {(quantity !== null && quantity !== ' ') && ` - ${quantity}`}
                 </p>
               );
             })
@@ -58,6 +59,15 @@ function MealRecipe() {
           />
         </div>
       ))}
+      <div>
+        <button
+          type="button"
+          data-testid="start-recipe-btn"
+          style={ { position: 'fixed', bottom: 0 } }
+        >
+          Iniciar Receita
+        </button>
+      </div>
     </div>
   );
 }

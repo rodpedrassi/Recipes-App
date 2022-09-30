@@ -44,7 +44,7 @@ function DrinkRecipe() {
                   data-testid={ `${index}-ingredient-name-and-measure` }
                 >
                   {drinkDetail[0][ingredient]}
-                  {(quantity !== null && quantity !== '') && ` - ${quantity}`}
+                  {(quantity !== null && quantity !== ' ') && ` - ${quantity}`}
                 </p>
               );
             })
@@ -53,6 +53,15 @@ function DrinkRecipe() {
           <p data-testid="instructions">{drinkDetail[0].strInstructions}</p>
         </div>
       ))}
+      <div>
+        <button
+          type="button"
+          data-testid="start-recipe-btn"
+          style={ { position: 'fixed', bottom: 0 } }
+        >
+          Iniciar Receita
+        </button>
+      </div>
     </div>
   );
 }
