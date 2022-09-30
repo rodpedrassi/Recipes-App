@@ -3,6 +3,9 @@ import { useParams, useHistory } from 'react-router-dom';
 import { fetchDrinkById } from '../services/fetchDrink';
 import { fetchRecommendedMeals } from '../services/fetchMeal';
 import '../css/detailsPage.css';
+import blackHeartIcon from '../images/blackHeartIcon.svg';
+import whiteHeartIcon from '../images/whiteHeartIcon.svg';
+import { AddToDoneOrFavorites, removeFromFavorites } from '../services/localStorage';
 
 const MAX_CARDS = 6;
 const copy = require('clipboard-copy');
@@ -15,7 +18,19 @@ function DrinkRecipe() {
   const [mealDetail, setMealDetail] = useState();
   const [isRecipeFinished, setIsRecipeFinished] = useState(true);
   const [isProgressRecipes, setIsProgressRecipes] = useState('Start Recipe');
+  const [isFavorited, setIsFavorited] = useState(false);
   const [copiedLink, setCopiedLink] = useState(false);
+
+  const checkFavorite = () => {
+    const favoriteRecipes = JSON.parse(localStorage.getItem('favoriteRecipes'));
+    if (favoriteRecipes) {
+      favoriteRecipes.forEach((element) => {
+        if (element.id === params.id) {
+          setIsFavorited(true);
+        }
+      });
+    }
+  };
 
   const progressRecipes = () => {
     const inProgressRecipes = JSON.parse(localStorage.getItem('inProgressRecipes'));
@@ -66,6 +81,7 @@ function DrinkRecipe() {
     fetchRecomendations();
     recipeFinished();
     progressRecipes();
+    checkFavorite();
   }, []);
 
   const ingredientsKeys = drinkDetail && Object.keys(drinkDetail[0]).filter(
@@ -79,8 +95,38 @@ function DrinkRecipe() {
   const cardsToRenderize = mealDetail && mealDetail
     .filter((e, index) => index < MAX_CARDS);
 
+  const clickFav = () => {
+    // [{ id, type, nationality, category, alcoholicOrNot, name, image }]
+    const { idDrink, strArea = '', strCategory,
+      strAlcoholic, strDrink, strDrinkThumb } = drinkDetail[0];
+    // console.log(drinkDetail[0]);
+    const value = {
+      id: idDrink,
+      type: 'drink',
+      nationality: strArea,
+      category: strCategory,
+      alcoholicOrNot: strAlcoholic,
+      name: strDrink,
+      image: strDrinkThumb,
+    };
+    if (isFavorited) {
+      removeFromFavorites('favoriteRecipes', params.id);
+    } else {
+      AddToDoneOrFavorites('favoriteRecipes', value);
+    }
+    setIsFavorited(!isFavorited);
+  };
+
   return (
     <div className="recipe-detais-main">
+      <button data-testid="fav-icon" type="button" onClick={ clickFav }>
+        <img
+          alt="Icone de Favoritar"
+          data-testid="favorite-btn"
+          src={ isFavorited ? blackHeartIcon : whiteHeartIcon }
+          style={ { width: '50px', height: '50px' } }
+        />
+      </button>
       {drinkDetail && drinkDetail.map((drink) => (
         <div key={ drink.idDrink }>
           <h2 data-testid="recipe-title">{drink.strDrink}</h2>
@@ -144,12 +190,6 @@ function DrinkRecipe() {
           onClick={ copyRoute }
         >
           Compartilhar Receita
-        </button>
-        <button
-          data-testid="favorite-btn"
-          type="button"
-        >
-          Favoritar Receita
         </button>
       </div>
       {copiedLink && (<p>Link copied!</p>)}

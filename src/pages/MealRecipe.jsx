@@ -3,6 +3,9 @@ import { useParams, useHistory } from 'react-router-dom';
 import { fetchMealById } from '../services/fetchMeal';
 import { fetchRecommendedDrinks } from '../services/fetchDrink';
 import '../css/detailsPage.css';
+import blackHeartIcon from '../images/blackHeartIcon.svg';
+import whiteHeartIcon from '../images/whiteHeartIcon.svg';
+import { AddToDoneOrFavorites, removeFromFavorites } from '../services/localStorage';
 
 const MAX_CARDS = 6;
 const copy = require('clipboard-copy');
@@ -16,6 +19,18 @@ function MealRecipe() {
   const [isRecipeFinished, setIsRecipeFinished] = useState(true);
   const [isProgressRecipes, setIsProgressRecipes] = useState('Start Recipe');
   const [copiedLink, setCopiedLink] = useState(false);
+  const [isFavorited, setIsFavorited] = useState(false);
+
+  const checkFavorite = () => {
+    const favoriteRecipes = JSON.parse(localStorage.getItem('favoriteRecipes'));
+    if (favoriteRecipes) {
+      favoriteRecipes.forEach((element) => {
+        if (element.id === params.id) {
+          setIsFavorited(true);
+        }
+      });
+    }
+  };
 
   const progressRecipes = () => {
     const inProgressRecipes = JSON.parse(localStorage.getItem('inProgressRecipes'));
@@ -66,6 +81,7 @@ function MealRecipe() {
     fetchRecomendations();
     recipeFinished();
     progressRecipes();
+    checkFavorite();
   }, []);
 
   const ingredientsKeys = mealDetail && Object.keys(mealDetail[0]).filter(
@@ -79,8 +95,37 @@ function MealRecipe() {
   const cardsToRenderize = drinkDetail && drinkDetail
     .filter((e, index) => index < MAX_CARDS);
 
+  const clickFav = () => {
+    // [{ id, type, nationality, category, alcoholicOrNot, name, image }]
+    const { idMeal, strArea, strCategory,
+      strMeal, strMealThumb } = mealDetail[0];
+    const value = {
+      id: idMeal,
+      type: 'meal',
+      nationality: strArea,
+      category: strCategory,
+      alcoholicOrNot: '',
+      name: strMeal,
+      image: strMealThumb,
+    };
+    if (isFavorited) {
+      removeFromFavorites('favoriteRecipes', params.id);
+    } else {
+      AddToDoneOrFavorites('favoriteRecipes', value);
+    }
+    setIsFavorited(!isFavorited);
+  };
+
   return (
     <div className="recipe-detais-main">
+      <button data-testid="fav-icon" type="button" onClick={ clickFav }>
+        <img
+          alt="Icone de Favoritar"
+          data-testid="favorite-btn"
+          src={ isFavorited ? blackHeartIcon : whiteHeartIcon }
+          style={ { width: '50px', height: '50px' } }
+        />
+      </button>
       {mealDetail && mealDetail.map((meal) => (
         <div className="recipe-section" key={ meal.idMeal }>
           <h2 data-testid="recipe-title">{meal.strMeal}</h2>
@@ -156,12 +201,6 @@ function MealRecipe() {
           onClick={ copyRoute }
         >
           Compartilhar Receita
-        </button>
-        <button
-          data-testid="favorite-btn"
-          type="button"
-        >
-          Favoritar Receita
         </button>
       </div>
       {copiedLink && (<p>Link copied!</p>)}
