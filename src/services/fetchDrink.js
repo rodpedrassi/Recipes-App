@@ -83,3 +83,17 @@ export const fetchFilterByCategoryDrinks = async (category) => {
     throw new Error(ERROR_DETAILS, error);
   }
 };
+
+export const fetchRecommendedDrinks = async (endpoint) => {
+  try {
+    const request = await fetch(endpoint);
+    const data = await request.json();
+    if (!data.drinks) {
+      global.alert(ERROR_MSG);
+    } else {
+      return data;
+    }
+  } catch (error) {
+    throw new Error(ERROR_DETAILS, error);
+  }
+};
