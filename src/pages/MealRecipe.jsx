@@ -11,6 +11,31 @@ function MealRecipe() {
 
   const [mealDetail, setMealDetail] = useState();
   const [drinkDetail, setDrinkDetail] = useState();
+  const [isRecipeFinished, setIsRecipeFinished] = useState(true);
+  const [isProgressRecipes, setIsProgressRecipes] = useState('Start Recipe');
+
+  const progressRecipes = () => {
+    const inProgressRecipes = JSON.parse(localStorage.getItem('inProgressRecipes'));
+    if (inProgressRecipes) {
+      const { meals } = inProgressRecipes;
+      Object.keys(meals).forEach((element) => {
+        if (element === params.id) {
+          setIsProgressRecipes('Continue Recipe');
+        }
+      });
+    }
+  };
+
+  const recipeFinished = () => {
+    const doneRecipes = JSON.parse(localStorage.getItem('doneRecipes'));
+    if (doneRecipes) {
+      doneRecipes.forEach((element) => {
+        if (element.id === params.id) {
+          setIsRecipeFinished(false);
+        }
+      });
+    }
+  };
 
   useEffect(() => {
     const fetchApi = async () => {
@@ -21,8 +46,11 @@ function MealRecipe() {
       const response = await fetchRecommendedDrinks('https://www.thecocktaildb.com/api/json/v1/1/search.php?s=');
       return setDrinkDetail(response.drinks);
     };
+
     fetchApi();
     fetchRecomendations();
+    recipeFinished();
+    progressRecipes();
   }, []);
 
   const ingredientsKeys = mealDetail && Object.keys(mealDetail[0]).filter(
@@ -90,15 +118,19 @@ function MealRecipe() {
           ))
         }
       </div>
-      <div>
-        <button
-          type="button"
-          data-testid="start-recipe-btn"
-          style={ { position: 'fixed', bottom: 0 } }
-        >
-          Iniciar Receita
-        </button>
-      </div>
+      {isRecipeFinished
+        && (
+          <div>
+            <button
+              type="button"
+              data-testid="start-recipe-btn"
+              style={ { position: 'fixed', bottom: 0 } }
+              value={ isProgressRecipes }
+            >
+              {isProgressRecipes}
+            </button>
+          </div>
+        )}
     </div>
   );
 }
