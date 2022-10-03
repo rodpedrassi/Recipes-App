@@ -73,3 +73,8 @@ export const removeFromFavorites = (key, id) => {
   const excludeThruID = saved.filter((item) => item.id !== id);
   saveToLocalStorage(key, excludeThruID);
 };
+
+export const getObjectInStore = (storeKey) => {
+  const result = JSON.parse(localStorage.getItem(storeKey));
+  return result;
+};
