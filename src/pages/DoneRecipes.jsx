@@ -38,6 +38,7 @@ function DoneRecipes() {
   return (
     <main>
       <Header />
+      <h2 data-testid="page-title">Done Recipes</h2>
       <button
         onClick={ () => filterRecipes('All') }
         type="button"
