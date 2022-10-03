@@ -110,7 +110,7 @@ describe('Testa os botões do DoneRecipes', () => {
     const mealRecipeTitle = screen.getByText(doneRecipes[0].name);
     expect(drinkRecipeTitle && mealRecipeTitle).toBeDefined();
   });
-  
+
   it('Testa se quando o botão de bebidas é clicado mostra apenas receitas de Drinks', () => {
     const bttFilterDrinks = screen.getByRole('button', { name: /drinks/i });
     userEvent.click(bttFilterDrinks);
