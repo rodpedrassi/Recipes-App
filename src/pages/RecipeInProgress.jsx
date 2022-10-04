@@ -31,6 +31,7 @@ function RecipeInProgress() {
 
   const verifyCheck = () => {
     setSaved(getSavedInProgress());
+    console.log(saved);
   };
 
   const saveProgress = ({ target: { name, checked } }) => {
