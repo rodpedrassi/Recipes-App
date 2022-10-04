@@ -5,7 +5,11 @@ import { fetchRecommendedDrinks } from '../services/fetchDrink';
 import '../css/detailsPage.css';
 import blackHeartIcon from '../images/blackHeartIcon.svg';
 import whiteHeartIcon from '../images/whiteHeartIcon.svg';
-import { AddToDoneOrFavorites, removeFromFavorites } from '../services/localStorage';
+import {
+  AddToDoneOrFavorites,
+  removeFromFavorites,
+  addInProgressMeals,
+} from '../services/localStorage';
 
 const MAX_CARDS = 6;
 const copy = require('clipboard-copy');
@@ -42,12 +46,6 @@ function MealRecipe() {
         }
       });
     }
-  };
-
-  const sendTo = () => {
-    const route = history.location.pathname;
-    const path = `${route}/in-progress`;
-    history.push(path);
   };
 
   const copyRoute = () => {
@@ -89,11 +87,19 @@ function MealRecipe() {
   );
 
   const filteredIngredients = mealDetail && ingredientsKeys.filter(
-    (key) => mealDetail[key] !== null && mealDetail[key] !== '',
+    (key) => mealDetail[key] !== null && mealDetail[key] !== ' ',
   );
 
   const cardsToRenderize = drinkDetail && drinkDetail
     .filter((e, index) => index < MAX_CARDS);
+
+  const sendTo = () => {
+    addInProgressMeals(params.id, []);
+    console.log(filteredIngredients);
+    const route = history.location.pathname;
+    const path = `${route}/in-progress`;
+    history.push(path);
+  };
 
   const clickFav = () => {
     // [{ id, type, nationality, category, alcoholicOrNot, name, image }]

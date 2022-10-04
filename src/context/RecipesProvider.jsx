@@ -15,6 +15,7 @@ function RecipesProvider({ children }) {
     renderizedRecipes,
     setRenderizedRecipes,
   };
+
   return (
     <RecipesContext.Provider value={ contextType }>
       { children }
