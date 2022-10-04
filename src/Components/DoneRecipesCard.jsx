@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { useHistory } from 'react-router-dom';
 import shareButtonIcon from '../images/shareIcon.svg';
+import blackHeartIcon from '../images/blackHeartIcon.svg';
 
 function DoneRecipesCard({ recipe, index, showItem, unfavoriteRecipe }) {
   const [visibleItem, setVisibleItem] = useState({ share: false });
@@ -79,10 +80,10 @@ function DoneRecipesCard({ recipe, index, showItem, unfavoriteRecipe }) {
             onClick={ () => unfavoriteRecipe(recipe) }
             type="button"
             name="favorite-btn"
-            src={ favoriteButtonIconActive }
+            src={ blackHeartIcon }
             data-testid={ `${index}-horizontal-favorite-btn` }
           >
-            <img src={ favoriteButtonIconActive } alt="favorite recipe" />
+            <img src={ blackHeartIcon } alt="favorite recipe" />
           </button>
         )}
       </div>

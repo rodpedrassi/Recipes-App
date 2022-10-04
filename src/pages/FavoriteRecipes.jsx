@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { getObjectInStore } from '../services/localStorage';
+import { getObjectInStore, removeFromFavorites } from '../services/localStorage';
 import Header from '../Components/Header';
 import DoneRecipesCard from '../Components/DoneRecipesCard';
 
-function DoneRecipes() {
-  const doneRecipesKey = 'doneRecipes';
+function FavoriteRecipes() {
+  const doneRecipesKey = 'favoriteRecipes';
   const [doneRecipes, setDoneRecipes] = useState([]);
   const [recipesFiltered, setRecipesFiltered] = useState([]);
 
@@ -35,10 +35,15 @@ function DoneRecipes() {
     }
   };
 
+  const unfavoriteRecipe = (recipes) => {
+    removeFromFavorites(doneRecipesKey, recipes.id);
+    setRecipesFiltered(getObjectInStore(doneRecipesKey));
+  };
+
   return (
     <main>
-      <Header />
-      <h2 data-testid="page-title">Done Recipes</h2>
+      <Header title="Favorite Recipes" />
+
       <button
         onClick={ () => filterRecipes('All') }
         type="button"
@@ -62,10 +67,16 @@ function DoneRecipes() {
       </button>
 
       {recipesFiltered && recipesFiltered.map((recipe, index) => (
-        <DoneRecipesCard key={ index } index={ index } recipe={ recipe } />
+        <DoneRecipesCard
+          key={ index }
+          index={ index }
+          recipe={ recipe }
+          showItem
+          unfavoriteRecipe={ unfavoriteRecipe }
+        />
       )) }
     </main>
   );
 }
 
-export default DoneRecipes;
+export default FavoriteRecipes;
