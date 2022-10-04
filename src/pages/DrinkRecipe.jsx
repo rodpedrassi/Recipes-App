@@ -8,6 +8,7 @@ import whiteHeartIcon from '../images/whiteHeartIcon.svg';
 import {
   addInProgressDrinks,
   AddToDoneOrFavorites,
+  getSavedInProgress,
   removeFromFavorites } from '../services/localStorage';
 
 const MAX_CARDS = 6;
@@ -48,7 +49,15 @@ function DrinkRecipe() {
   };
 
   const sendTo = () => {
-    addInProgressDrinks(params.id, []);
+    const lsInprogress = getSavedInProgress();
+    const { drinks } = lsInprogress;
+    console.log(drinks);
+    const { id } = params;
+    if (drinks[id]) {
+      addInProgressDrinks(params.id, drinks[id]);
+    } else {
+      addInProgressDrinks(params.id, []);
+    }
     const route = history.location.pathname;
     const path = `${route}/in-progress`;
     history.push(path);

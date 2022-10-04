@@ -17,6 +17,8 @@ function RecipeInProgress() {
   const [ingredient, setIngredient] = useState([]);
   const [usedIngredient, setUsedIngredient] = useState([]);
   const [saved, setSaved] = useState({});
+  const [help, setHelp] = useState([]);
+  const [checkBoxArray, setCheckBoxArray] = useState([]);
 
   const checkFavorite = () => {
     const favoriteRecipes = JSON.parse(localStorage.getItem('favoriteRecipes'));
@@ -31,7 +33,29 @@ function RecipeInProgress() {
 
   const verifyCheck = () => {
     setSaved(getSavedInProgress());
+    if (ingredient) {
+      ingredient.forEach((ing) => {
+        setHelp(help.push(drinkDetail[0][ing]));
+      });
+    }
+    let aux = [];
+    if (saved.drinks) {
+      const { drinks } = saved;
+      help.forEach((e) => {
+        if (drinks[id].includes(e)) {
+          aux = [...aux, true];
+          setCheckBoxArray(aux);
+        } else {
+          aux = [...aux, false];
+          setCheckBoxArray(aux);
+        }
+      });
+    }
   };
+
+  useEffect(() => {
+    verifyCheck();
+  }, [ingredient]);
 
   const saveProgress = ({ target: { name, checked } }) => {
     if (!checked) {
@@ -47,11 +71,8 @@ function RecipeInProgress() {
       setUsedIngredient(newArrayOfIngredients);
       addInProgressDrinks(id, newArrayOfIngredients);
     }
+    verifyCheck();
   };
-
-  // const handleCheck = () => {
-  //   if (saved.drinks[id])
-  // };
 
   useEffect(() => {
     const fetchMeal = async () => {
@@ -68,7 +89,6 @@ function RecipeInProgress() {
       fetchDrink();
     }
     checkFavorite();
-    verifyCheck();
   }, []);
 
   useEffect(() => {
@@ -88,7 +108,6 @@ function RecipeInProgress() {
         (key) => drinkDetail[0][key] !== null && drinkDetail[0][key] !== '',
       );
       setIngredient(filteredIngredients);
-      console.log(filteredIngredients);
     }
   }, [mealDetail, drinkDetail]);
 
@@ -111,6 +130,10 @@ function RecipeInProgress() {
       AddToDoneOrFavorites('favoriteRecipes', value);
     }
     setIsFavorited(!isFavorited);
+  };
+
+  const alow = () => {
+    setCheckBoxArray([false, true, false]);
   };
 
   return (
@@ -187,8 +210,8 @@ function RecipeInProgress() {
                       type="checkbox"
                       id="checkbox"
                       name={ drinkDetail[0][ing] }
-                      onChange={ saveProgress }
-                      // checked={ handleCheck }
+                      onClick={ saveProgress }
+                      checked={ checkBoxArray[index] }
                     />
                   </label>
                 );
@@ -213,6 +236,7 @@ function RecipeInProgress() {
             <button
               data-testid="finish-recipe-btn"
               type="button"
+              onClick={ alow }
             >
               Finalizar Receita
             </button>
