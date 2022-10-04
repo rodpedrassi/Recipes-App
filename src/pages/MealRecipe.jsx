@@ -132,6 +132,16 @@ function MealRecipe() {
           style={ { width: '50px', height: '50px' } }
         />
       </button>
+      <div>
+        <button
+          data-testid="share-btn"
+          type="button"
+          onClick={ copyRoute }
+        >
+          Compartilhar Receita
+        </button>
+      </div>
+      {copiedLink && (<p>Link copied!</p>)}
       {mealDetail && mealDetail.map((meal) => (
         <div className="recipe-section" key={ meal.idMeal }>
           <h2 data-testid="recipe-title">{meal.strMeal}</h2>
@@ -200,16 +210,7 @@ function MealRecipe() {
             </button>
           </div>
         )}
-      <div>
-        <button
-          data-testid="share-btn"
-          type="button"
-          onClick={ copyRoute }
-        >
-          Compartilhar Receita
-        </button>
-      </div>
-      {copiedLink && (<p>Link copied!</p>)}
+
     </div>
   );
 }

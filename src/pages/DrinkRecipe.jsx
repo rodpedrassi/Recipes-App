@@ -140,6 +140,16 @@ function DrinkRecipe() {
           style={ { width: '50px', height: '50px' } }
         />
       </button>
+      <div>
+        <button
+          data-testid="share-btn"
+          type="button"
+          onClick={ copyRoute }
+        >
+          Compartilhar Receita
+        </button>
+      </div>
+      {copiedLink && (<p>Link copied!</p>)}
       {drinkDetail && drinkDetail.map((drink) => (
         <div key={ drink.idDrink }>
           <h2 data-testid="recipe-title">{drink.strDrink}</h2>
@@ -196,16 +206,7 @@ function DrinkRecipe() {
           </button>
         </div>
       )}
-      <div>
-        <button
-          data-testid="share-btn"
-          type="button"
-          onClick={ copyRoute }
-        >
-          Compartilhar Receita
-        </button>
-      </div>
-      {copiedLink && (<p>Link copied!</p>)}
+
     </div>
   );
 }
