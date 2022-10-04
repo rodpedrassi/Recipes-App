@@ -5,7 +5,11 @@ import { fetchRecommendedMeals } from '../services/fetchMeal';
 import '../css/detailsPage.css';
 import blackHeartIcon from '../images/blackHeartIcon.svg';
 import whiteHeartIcon from '../images/whiteHeartIcon.svg';
-import { AddToDoneOrFavorites, removeFromFavorites } from '../services/localStorage';
+import {
+  addInProgressDrinks,
+  AddToDoneOrFavorites,
+  getSavedInProgress,
+  removeFromFavorites } from '../services/localStorage';
 
 const MAX_CARDS = 6;
 const copy = require('clipboard-copy');
@@ -45,6 +49,15 @@ function DrinkRecipe() {
   };
 
   const sendTo = () => {
+    const lsInprogress = getSavedInProgress();
+    const { drinks } = lsInprogress;
+    console.log(drinks);
+    const { id } = params;
+    if (drinks[id]) {
+      addInProgressDrinks(params.id, drinks[id]);
+    } else {
+      addInProgressDrinks(params.id, []);
+    }
     const route = history.location.pathname;
     const path = `${route}/in-progress`;
     history.push(path);
