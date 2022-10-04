@@ -4,7 +4,9 @@ import { fetchMealById } from '../services/fetchMeal';
 import { fetchDrinkById } from '../services/fetchDrink';
 import blackHeartIcon from '../images/blackHeartIcon.svg';
 import whiteHeartIcon from '../images/whiteHeartIcon.svg';
-import { addInProgressDrinks, getSavedInProgress } from '../services/localStorage';
+import { AddToDoneOrFavorites, removeFromFavorites } from '../services/localStorage';
+
+const copy = require('clipboard-copy');
 
 function RecipeInProgress() {
   const { id } = useParams();
@@ -15,8 +17,7 @@ function RecipeInProgress() {
   const [drinkDetail, setDrinkDetail] = useState();
   const [isFavorited, setIsFavorited] = useState(false);
   const [ingredient, setIngredient] = useState([]);
-  const [usedIngredient, setUsedIngredient] = useState([]);
-  const [saved, setSaved] = useState({});
+  const [copiedLink, setCopiedLink] = useState(false);
 
   const checkFavorite = () => {
     const favoriteRecipes = JSON.parse(localStorage.getItem('favoriteRecipes'));
@@ -28,31 +29,6 @@ function RecipeInProgress() {
       });
     }
   };
-
-  const verifyCheck = () => {
-    setSaved(getSavedInProgress());
-    console.log(saved);
-  };
-
-  const saveProgress = ({ target: { name, checked } }) => {
-    if (!checked) {
-      const prevIngredients = [...usedIngredient];
-      const index = prevIngredients.findIndex((e) => e === name);
-      const initialSlice = prevIngredients.slice(0, index);
-      const finalSlice = prevIngredients.slice(index + 1, prevIngredients.length);
-      const newIngredientsList = [...initialSlice, ...finalSlice];
-      setUsedIngredient(newIngredientsList);
-      addInProgressDrinks(id, newIngredientsList);
-    } else {
-      const newArrayOfIngredients = [...usedIngredient, name];
-      setUsedIngredient(newArrayOfIngredients);
-      addInProgressDrinks(id, newArrayOfIngredients);
-    }
-  };
-
-  // const handleCheck = () => {
-  //   if (saved.drinks[id])
-  // };
 
   useEffect(() => {
     const fetchMeal = async () => {
@@ -69,7 +45,6 @@ function RecipeInProgress() {
       fetchDrink();
     }
     checkFavorite();
-    verifyCheck();
   }, []);
 
   useEffect(() => {
@@ -89,11 +64,10 @@ function RecipeInProgress() {
         (key) => drinkDetail[0][key] !== null && drinkDetail[0][key] !== '',
       );
       setIngredient(filteredIngredients);
-      console.log(filteredIngredients);
     }
   }, [mealDetail, drinkDetail]);
 
-  const clickFav = () => {
+  const clickFavMeal = () => {
     // [{ id, type, nationality, category, alcoholicOrNot, name, image }]
     const { idMeal, strArea, strCategory,
       strMeal, strMealThumb } = mealDetail[0];
@@ -112,6 +86,38 @@ function RecipeInProgress() {
       AddToDoneOrFavorites('favoriteRecipes', value);
     }
     setIsFavorited(!isFavorited);
+  };
+
+  const clickFavDrink = () => {
+    // [{ id, type, nationality, category, alcoholicOrNot, name, image }]
+    const { idDrink, strArea = '', strCategory,
+      strAlcoholic, strDrink, strDrinkThumb } = drinkDetail[0];
+    // console.log(drinkDetail[0]);
+    const value = {
+      id: idDrink,
+      type: 'drink',
+      nationality: strArea,
+      category: strCategory,
+      alcoholicOrNot: strAlcoholic,
+      name: strDrink,
+      image: strDrinkThumb,
+    };
+    if (isFavorited) {
+      removeFromFavorites('favoriteRecipes', id);
+    } else {
+      AddToDoneOrFavorites('favoriteRecipes', value);
+    }
+    setIsFavorited(!isFavorited);
+  };
+
+  const copyRoute = () => {
+    if (route.includes('meals')) {
+      copy(`http://localhost:3000/meals/${id}`);
+      setCopiedLink(true);
+    } else {
+      copy(`http://localhost:3000/drinks/${id}`);
+      setCopiedLink(true);
+    }
   };
 
   return (
@@ -135,15 +141,13 @@ function RecipeInProgress() {
                     <input
                       type="checkbox"
                       id="checkbox"
-                      onChange={ saveProgress }
                       name={ mealDetail[0][ing] }
-                      // checked={ }
                     />
                   </label>
                 );
               })
             }
-            <button data-testid="fav-icon" type="button" onClick={ clickFav }>
+            <button data-testid="fav-icon" type="button" onClick={ clickFavMeal }>
               <img
                 alt="Icone de Favoritar"
                 data-testid="favorite-btn"
@@ -154,6 +158,7 @@ function RecipeInProgress() {
             <button
               data-testid="share-btn"
               type="button"
+              onClick={ copyRoute }
             >
               Compartilhar Receita
             </button>
@@ -188,14 +193,12 @@ function RecipeInProgress() {
                       type="checkbox"
                       id="checkbox"
                       name={ drinkDetail[0][ing] }
-                      onChange={ saveProgress }
-                      // checked={ handleCheck }
                     />
                   </label>
                 );
               })
             }
-            <button data-testid="fav-icon" type="button" onClick={ clickFav }>
+            <button data-testid="fav-icon" type="button" onClick={ clickFavDrink }>
               <img
                 alt="Icone de Favoritar"
                 data-testid="favorite-btn"
@@ -206,6 +209,7 @@ function RecipeInProgress() {
             <button
               data-testid="share-btn"
               type="button"
+              onClick={ copyRoute }
             >
               Compartilhar Receita
             </button>
@@ -220,8 +224,8 @@ function RecipeInProgress() {
           </div>
         )
       }
+      {copiedLink && (<p>Link copied!</p>)}
     </div>
   );
 }
-
 export default RecipeInProgress;
